@@ -7,12 +7,16 @@
 {% endblock %}
 {% block body %}
 <body>
-    <strong> Aktuální teplota: </strong>{{ weather.temp }} °C
+    <strong> Aktuální teplota: </strong>{{ weather.temp }} °C<br>
+    <strong> Stav počasí: </strong>{{ weather.description }}<br>
 
     <div class="form">
+        <br><strong>Zobrazit jiné město:</strong>
         <form action="/", method="POST">
             <input type="text" name="city" id="city">
             <input type="submit" value="Zobrazit">
         </form>
+    </div>
+    Aktuálně fungují pouze jednoslovné názvy měst.
 </body>
 {% endblock %}

@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import requests
 from dotenv import load_dotenv
 from os import getenv
@@ -9,17 +9,30 @@ app = Flask(__name__)
 class Weather():
     city = "a"
     temp = 0
+    description = ""
 
 
-@app.route("/")
+@app.route("/", methods=['POST', 'GET'])
 def index():
-    city = "Praha"
-    const_url = "https://api.openweathermap.org/data/2.5/weather?units=metric"
-    response = requests.post(const_url+"&q="+city+"&appid="+getenv("API_KEY"))
+    const_url = "https://api.openweathermap.org/data/2.5/weather?"
+    url_args = "units=metric&lang=cz"
+    if request.method == 'GET':
+        city = "Praha"
+    else:
+
+        city = request.form['city']
+    response = requests.post(const_url+url_args+"&q="
+                             + city+"&appid="
+                             + getenv("API_KEY"))
+    print(response)
+    if response.status_code != 200:
+        return "Město nenalezeno."
     weather_data = response.json()
     weather = Weather()
     weather.city = city
+    weather.description = weather_data["weather"][0]["description"]
     weather.temp = weather_data["main"]["temp"]
+
     return render_template('index.html', weather=weather)
 
 

@@ -7,8 +7,9 @@
 {% endblock %}
 {% block body %}
 <body>
-    <strong> Aktuální teplota: </strong>{{ weather.temp }} °C<br>
-    <strong> Stav počasí: </strong>{{ weather.description }}<br>
+    <strong>Aktuální teplota: </strong>{{ weather.temp }} °C<br>
+    <strong>Stav počasí: </strong>{{ weather.description }}<br>
+    <strong>Rychlost větru: </strong> {{ weather.wind }} m/s<br>
 
     <div class="form">
         <br><strong>Zobrazit jiné město:</strong>

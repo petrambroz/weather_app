@@ -10,6 +10,7 @@ class Weather():
     city = "a"
     temp = 0
     description = ""
+    wind = 0
 
 
 @app.route("/", methods=['POST', 'GET'])
@@ -29,10 +30,10 @@ def index():
         return "Město nenalezeno."
     weather_data = response.json()
     weather = Weather()
-    weather.city = city
+    weather.city = weather_data["name"]
     weather.description = weather_data["weather"][0]["description"]
     weather.temp = weather_data["main"]["temp"]
-
+    weather.wind = weather_data["wind"]["speed"]
     return render_template('index.html', weather=weather)
 
 

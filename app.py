@@ -25,7 +25,6 @@ def index():
     response = requests.post(const_url+url_args+"&q="
                              + city+"&appid="
                              + getenv("API_KEY"))
-    print(response)
     if response.status_code != 200:
         return "Město nenalezeno."
     weather_data = response.json()
@@ -38,4 +37,4 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

@@ -1,10 +1,10 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone, tzinfo
 
 
 def convert_time(unix_timestamp) -> str:
     """converts unix timestamp to a readable format"""
-    utc_time = datetime.utcfromtimestamp(unix_timestamp)
-    return (utc_time + timedelta(hours=2)).strftime("%H:%M")
+    local_time = datetime.fromtimestamp(unix_timestamp)
+    return local_time.strftime("%H:%M")
 
 class Weather():
     """displays weather values for city. more to be added"""

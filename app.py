@@ -1,5 +1,9 @@
 """
-provides function for a basic webapp displaying weather in a selected city
+Small lightweight app for displaying weather.
+
+It provides functionality for a basic webapp displaying weather 
+in a selected city. When no city is requested, it defaults to
+Prague.
 """
 from os import getenv
 from flask import Flask, render_template, request
@@ -10,14 +14,22 @@ app = Flask(__name__)
 
 
 class Weather():
-    """
-    displayed weather values for city. more to be added
-    """
-    city = ""
-    temp = 0
-    description = ""
-    wind = 0
-
+    """displayed weather values for city. more to be added"""
+    def __init__(self) -> None:
+        self.city = ""
+        self.description = ""
+        self.temp = 0
+        self.wind = 0
+    def process(self, response):
+        """
+        extracts relevant data from servers response and saves them
+        to a variable
+        """
+        self.city = response["name"]
+        self.description = response["weather"][0]["description"]
+        self.temp = response["main"]["temp"]
+        self.wind = response["wind"]["speed"]
+        return self
 
 @app.route("/", methods=['POST', 'GET'])
 def index():
@@ -26,26 +38,23 @@ def index():
     if POST is used, it loads city name from the form and displays that instead.
     """
     const_url = "https://api.openweathermap.org/data/2.5/weather?"
-    url_args = "units=metric&lang=cz"
+    units = "units=metric"
+    language = "&lang=cz"
     if request.method == 'GET':
         city = "Praha"
     else:
-
         city = request.form['city']
-    response = requests.post(const_url+url_args+"&q="
-                             + city+"&appid="
-                             + getenv("API_KEY"),
-                             timeout=10)
+    if " " in city:
+        city = city.replace(" ", "+")
+    response = requests.post(const_url+units+language+"&q="
+                             + city +"&appid="
+                             + getenv("API_KEY"), timeout=10)
     if response.status_code != 200:
         return "Město nenalezeno."
-    weather_data = response.json()
-    weather = Weather()
-    weather.city = weather_data["name"]
-    weather.description = weather_data["weather"][0]["description"]
-    weather.temp = weather_data["main"]["temp"]
-    weather.wind = weather_data["wind"]["speed"]
-    return render_template('index.html', weather=weather)
+    instance=Weather
+    return render_template('index.html',
+                           weather=instance.process(instance,response.json()))
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)

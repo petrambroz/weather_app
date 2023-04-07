@@ -7,6 +7,7 @@
 {% endblock %}
 {% block body %}
 <body>
+    <img src={{ weather.img_url }} width="50px" height="50px"><br>
     <strong>Aktuální teplota: </strong>{{ weather.temp }} °C<br>
     <strong>Stav počasí: </strong>{{ weather.description }}<br>
     <strong>Rychlost větru: </strong> {{ weather.wind }} m/s<br>

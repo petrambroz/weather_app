@@ -20,6 +20,9 @@ class Weather():
         self.description = ""
         self.temp = 0
         self.wind = 0
+        self.img_id = 0
+        self.img_url = ""
+        self.img_url_base = "https://openweathermap.org/img/wn/"
     def process(self, response):
         """
         extracts relevant data from servers response and saves them
@@ -29,6 +32,8 @@ class Weather():
         self.description = response["weather"][0]["description"]
         self.temp = response["main"]["temp"]
         self.wind = response["wind"]["speed"]
+        self.img_id = response["weather"][0]["icon"]
+        self.img_url = "https://openweathermap.org/img/wn/" + str(self.img_id) + "@2x.png"
         return self
 
 @app.route("/", methods=['POST', 'GET'])

@@ -14,7 +14,8 @@ class Weather():
         self.sunrise = None
         self.sunset = None
 
-    def convert_time(self, unix_timestamp) -> str:
+    @staticmethod
+    def convert_time(unix_timestamp) -> str:
         """converts unix timestamp to a readable format"""
         utc_time = datetime.utcfromtimestamp(unix_timestamp)
         return (utc_time + timedelta(hours=2)).strftime("%H:%M")
@@ -30,6 +31,6 @@ class Weather():
         self.wind = response["wind"]["speed"]
         self.img_id = response["weather"][0]["icon"]
         self.img_url = "https://openweathermap.org/img/wn/" + str(self.img_id) + "@2x.png"
-        self.sunrise = self.convert_time(self, response["sys"]["sunrise"])
-        self.sunset = self.convert_time(self, response["sys"]["sunset"])
+        self.sunrise = self.convert_time(response["sys"]["sunrise"])
+        self.sunset = self.convert_time(response["sys"]["sunset"])
         return self

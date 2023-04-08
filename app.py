@@ -19,23 +19,34 @@ def index():
     index page, is default set to display weather in Prague.
     if POST is used, it loads city name from the form and displays that instead.
     """
-    const_url = "https://api.openweathermap.org/data/2.5/weather?"
     units = "units=metric"
     language = "&lang=cz"
-    if request.method == 'GET':
-        city = "Praha"
-    else:
-        city = request.form['city']
-    if " " in city:
-        city = city.replace(" ", "+")
-    response = requests.post(const_url+units+language+"&q="
-                             + city +"&appid="
-                             + getenv("API_KEY"), timeout=10)
+    city = remove_spaces(default_or_form())
+    response = post(units, language, city)
     if response.status_code != 200:
         return "Město nenalezeno."
     instance=Weather
     return render_template('index.html',
                            weather=instance.process(instance,response.json()))
+
+def post(units, language, city):
+    const_url = "https://api.openweathermap.org/data/2.5/weather?"
+    response = requests.post(const_url+units+language+"&q="
+                             + city +"&appid="
+                             + getenv("API_KEY"), timeout=10)
+    return response
+
+def default_or_form():
+    if request.method == 'GET':
+        city = "Praha"
+    else:
+        city = request.form['city']
+    return city
+
+def remove_spaces(city):
+    if " " in city:
+        city = city.replace(" ", "+")
+    return city
 
 
 if __name__ == "__main__":

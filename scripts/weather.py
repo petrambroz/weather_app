@@ -26,8 +26,8 @@ class Weather():
         """
         self.city = response["name"]
         self.description = response["weather"][0]["description"]
-        self.temp = response["main"]["temp"]
-        self.wind = response["wind"]["speed"]
+        self.temp = round(response["main"]["temp"])
+        self.wind = round(response["wind"]["speed"])
         self.img_id = response["weather"][0]["icon"]
         self.img_url = "https://openweathermap.org/img/wn/" + str(self.img_id) + "@2x.png"
         self.sunrise = convert_time(response["sys"]["sunrise"])

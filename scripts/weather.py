@@ -11,7 +11,8 @@ class Weather():
     def __init__(self) -> None:
         self.city = None
         self.description = None
-        self.temp = None
+        self.temp_min = None
+        self.temp_max = None
         self.wind = None
         self.img_id = None
         self.img_url = None
@@ -26,7 +27,8 @@ class Weather():
         """
         self.city = response["name"]
         self.description = response["weather"][0]["description"]
-        self.temp = round(response["main"]["temp"])
+        self.temp_min = round(response["main"]["temp_min"])
+        self.temp_max = round(response["main"]["temp_max"])
         self.wind = round(response["wind"]["speed"])
         self.img_id = response["weather"][0]["icon"]
         self.img_url = "https://openweathermap.org/img/wn/" + str(self.img_id) + "@2x.png"

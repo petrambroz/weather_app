@@ -21,7 +21,7 @@ def index():
     """
     units = "units=metric"
     language = "&lang=cz"
-    city = remove_spaces(default_or_form())
+    city = get_city()
     response = get_data(units, language, city)
     if response.status_code != 200:
         return "Město nenalezeno."
@@ -37,22 +37,18 @@ def get_data(units, language, city):
                              + getenv("API_KEY"), timeout=10)
     return response
 
-def default_or_form():
+def get_city():
     """
     if no city is entered (on first page load), Prague is
     selected, otherwise city name gets loaded from form
-    """
-    if request.method == 'GET':
-        city = "Praha"
-    else:
-        city = request.form['city']
-    return city
 
-def remove_spaces(city):
-    """
     in case of a multi-word city name, the spaces get
     replaced by '+' sign so the api can understand it
     """
+    if request.method == 'GET':
+        return "Praha"
+    else:
+        city = request.form['city']
     if " " in city:
         city = city.replace(" ", "+")
     return city

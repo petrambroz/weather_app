@@ -22,14 +22,15 @@ def index():
     units = "units=metric"
     language = "&lang=cz"
     city = remove_spaces(default_or_form())
-    response = post(units, language, city)
+    response = get_data(units, language, city)
     if response.status_code != 200:
         return "Město nenalezeno."
     instance=Weather
     return render_template('index.html',
                            weather=instance.process(instance,response.json()))
 
-def post(units, language, city):
+def get_data(units, language, city):
+    """gets a response from the openweather api"""
     const_url = "https://api.openweathermap.org/data/2.5/weather?"
     response = requests.post(const_url+units+language+"&q="
                              + city +"&appid="
@@ -37,6 +38,10 @@ def post(units, language, city):
     return response
 
 def default_or_form():
+    """
+    if no city is entered (on first page load), Prague is
+    selected, otherwise city name gets loaded from form
+    """
     if request.method == 'GET':
         city = "Praha"
     else:
@@ -44,6 +49,10 @@ def default_or_form():
     return city
 
 def remove_spaces(city):
+    """
+    in case of a multi-word city name, the spaces get
+    replaced by '+' sign so the api can understand it
+    """
     if " " in city:
         city = city.replace(" ", "+")
     return city

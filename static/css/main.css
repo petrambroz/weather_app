@@ -15,14 +15,14 @@ i {
     font-style: italic;
     font-size: 14px;
 }
-table, td {
+table {
     margin-left: auto;
     margin-right: auto;
     text-align: left;
 }
-.value {
+.value_field {
     width: auto;
 }
-.data {
+.data_field {
     width: 150px;
 }

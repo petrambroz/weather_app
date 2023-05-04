@@ -1,7 +1,7 @@
 """
 Small lightweight app for displaying weather.
 
-It provides functionality for a basic webapp displaying weather 
+It provides functionality for a basic webapp displaying weather
 in a selected city. When no city is requested, it defaults to
 Prague.
 """
@@ -13,11 +13,12 @@ from scripts.weather import Weather
 load_dotenv()
 app = Flask(__name__)
 
+
 @app.route("/", methods=['POST', 'GET'])
-def index():
+def index() -> str:
     """
     index page, is default set to display weather in Prague.
-    if POST is used, it loads city name from the form and displays that instead.
+    if POST is used, it loads city name from the form and displays that instead
     """
     units = "units=metric"
     language = "&lang=cz"
@@ -25,19 +26,21 @@ def index():
     response = get_data(units, language, city)
     if response.status_code != 200:
         return "Město nenalezeno."
-    instance=Weather
-    return render_template('index.html',
-                           weather=instance.process(instance,response.json()))
+    instance = Weather()
+    instance.process(response.json())
+    return render_template('index.html', weather=instance)
 
-def get_data(units, language, city):
+
+def get_data(units: str, language: str, city: str):
     """gets a response from the openweather api"""
     const_url = "https://api.openweathermap.org/data/2.5/weather?"
     response = requests.post(const_url+units+language+"&q="
-                             + city +"&appid="
-                             + getenv("API_KEY"), timeout=10)
+                             + city + "&appid="
+                             + str(getenv("API_KEY")), timeout=10)
     return response
 
-def get_city():
+
+def get_city() -> str:
     """
     if no city is entered (on first page load), Prague is
     selected, otherwise city name gets loaded from form
